@@ -30,7 +30,20 @@
                                 <td class="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{{ $ahorro->idahorro }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{{ $ahorro->periodo->cantidaddias ?? 'Sin periodo' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{{ \Carbon\Carbon::parse($ahorro->fechainicio)->format('Y-m-d') }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{{ \Carbon\Carbon::parse($ahorro->fechafin)->format('Y-m-d') }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                                    @php
+                                        $fechaFin = \Carbon\Carbon::parse($ahorro->fechafin);
+                                        $finalizado = $fechaFin->isPast(); // true si la fecha ya pasó
+                                    @endphp
+
+                                    <span class="{{ $finalizado ? 'text-red-600 font-semibold' : '' }}">
+                                        {{ $fechaFin->format('Y-m-d') }}
+                                            @if($finalizado)
+                                                <span class="block text-xs">Ahorro finalizado. Elimínelo para liberar fondos.</span>
+                                            @endif
+
+                                    </span>
+                                </td>
                                 <td class="px-6 py-4 text-sm text-green-700 font-semibold whitespace-nowrap">COP {{ number_format($ahorro->calcularValorAhorro(), 2) }}</td>
                                 <td class="px-6 py-4 text-sm whitespace-nowrap">
                                     <div class="flex flex-wrap gap-2">
